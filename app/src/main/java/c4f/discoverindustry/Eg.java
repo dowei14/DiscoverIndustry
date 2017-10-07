@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -40,6 +41,9 @@ public class Eg extends WearableActivity {
     private TextView tvGroupName;
     private LinearLayout linearLayoutGroup;
 
+    SimpleDateFormat startTime;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +59,16 @@ public class Eg extends WearableActivity {
         tvGroupName = (TextView) findViewById(R.id.tv_group_name);
         linearLayoutGroup = (LinearLayout) findViewById(R.id.linear_layout_group);
 
+
         nextPhase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (currentPhase == SETUP){
+                    Date c = Calendar.getInstance().getTime();
+                    startTime = new SimpleDateFormat("HH:mm:ss");
+                    Log.e("HERE",startTime.format(c));
+                    //TODO: set starting time UI, show T-XX in Minutes
+                }
                 if (currentPhase < MAX_PHASES) currentPhase += 1;
                 else currentPhase = 0;
                 updateDisplay();
@@ -95,7 +106,7 @@ public class Eg extends WearableActivity {
     private void updateDisplay() {
         mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         linearLayoutGroup.setVisibility(View.GONE);
-        nextGroup.setVisibility(View.INVISIBLE);
+        nextGroup.setVisibility(View.GONE);
 
         switch (currentPhase){
             case SETUP:

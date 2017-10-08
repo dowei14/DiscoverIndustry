@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Discover Industry</string>
-    <string name="current_format">Industrie entdecken</string>
-    <string name="format_name">Format: </string>
-    <string name="stage_name">Phase:</string>
     <string name="stage_setup">Endzeit</string>
     <string name="stage_intro">Einführung</string>
     <string name="stage_group">Gruppen</string>

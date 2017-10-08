@@ -2,21 +2,19 @@ package c4f.discoverindustry;
 
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.BoxInsetLayout;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
+import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 public class Eg extends WearableActivity {
 
@@ -40,8 +38,11 @@ public class Eg extends WearableActivity {
     private TextView tvCurrentGroup;
     private TextView tvGroupName;
     private LinearLayout linearLayoutGroup;
+    private TimePicker timePicker;
+    private TextView tvTMinus;
 
-    SimpleDateFormat startTime;
+    SimpleDateFormat endTime;
+    Date end;
 
 
     @Override
@@ -50,24 +51,41 @@ public class Eg extends WearableActivity {
         setContentView(R.layout.activity_eg);
         setAmbientEnabled();
 
+        //ToDo: Hide Format
+        TextView tvFormatName = (TextView) findViewById(R.id.format_name);
+        TextView tvCurrentFormat = (TextView) findViewById(R.id.current_format);
+        TextView tvStageName = (TextView) findViewById(R.id.tv_stage_name);
         mClockView = (TextView) findViewById(R.id.clock);
-
+        timePicker = (TimePicker) findViewById(R.id.timePicker);
         nextPhase = (ImageButton) findViewById(R.id.button_next_state);
         nextGroup = (ImageButton) findViewById(R.id.button_switch_groups);
         tvCurrentPhase = (TextView) findViewById(R.id.tv_current_stage);
         tvCurrentGroup = (TextView) findViewById(R.id.tv_current_group);
         tvGroupName = (TextView) findViewById(R.id.tv_group_name);
         linearLayoutGroup = (LinearLayout) findViewById(R.id.linear_layout_group);
+        tvTMinus = (TextView) findViewById(R.id.tv_t_minus);
 
+        timePicker.setIs24HourView(true);
+        timePicker.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+
+        mClockView.setVisibility(View.GONE);
+        linearLayoutGroup.setVisibility(View.GONE);
+        nextGroup.setVisibility(View.GONE);
+        tvStageName.setVisibility(View.GONE);
+        tvCurrentFormat.setVisibility(View.GONE);
+        tvFormatName.setVisibility(View.GONE);
+        tvTMinus.setVisibility(View.GONE);
+
+
+        endTime = new SimpleDateFormat("HH:mm:ss");
 
         nextPhase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (currentPhase == SETUP){
-                    Date c = Calendar.getInstance().getTime();
-                    startTime = new SimpleDateFormat("HH:mm:ss");
-                    Log.e("HERE",startTime.format(c));
-                    //TODO: set starting time UI, show T-XX in Minutes
+                    end = new Date();
+                    end.setHours(timePicker.getHour());
+                    end.setMinutes(timePicker.getMinute());
                 }
                 if (currentPhase < MAX_PHASES) currentPhase += 1;
                 else currentPhase = 0;
@@ -105,24 +123,33 @@ public class Eg extends WearableActivity {
 
     private void updateDisplay() {
         mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
-        linearLayoutGroup.setVisibility(View.GONE);
-        nextGroup.setVisibility(View.GONE);
-
+        if (end != null) tvTMinus.setText(getTMinus());
         switch (currentPhase){
             case SETUP:
+                currentGroup = 1;
+                tvTMinus.setVisibility(View.GONE);
                 tvCurrentPhase.setText(getString(R.string.stage_setup));
+                timePicker.setVisibility(View.VISIBLE);
+                nextPhase.setImageResource(R.drawable.ic_play_arrow_black_36dp);
                 break;
             case EINFUEHRUNG:
+                tvTMinus.setVisibility(View.VISIBLE);
+                nextPhase.setImageResource(R.drawable.ic_skip_next_black_36dp);
+                timePicker.setVisibility(View.GONE);
                 tvCurrentPhase.setText(getString(R.string.stage_intro));
                 break;
             case GRUPPENPHASE:
                 linearLayoutGroup.setVisibility(View.VISIBLE);
                 nextGroup.setVisibility(View.VISIBLE);
                 tvCurrentPhase.setText(getString(R.string.stage_group));
+                tvCurrentPhase.setVisibility(View.GONE);
                 tvCurrentGroup.setText(String.valueOf(currentGroup));
                 break;
             case ABSCHLUSS:
+                nextGroup.setVisibility(View.GONE);
+                tvCurrentPhase.setVisibility(View.VISIBLE);
                 tvCurrentPhase.setText(getString(R.string.stage_closing));
+                linearLayoutGroup.setVisibility(View.GONE);
                 break;
             default:
                 throw new RuntimeException("unknown phase");
@@ -138,5 +165,13 @@ public class Eg extends WearableActivity {
             //mTextView.setTextColor(getResources().getColor(android.R.color.black));
             //mClockView.setVisibility(View.GONE);
         }
+    }
+
+    private String getTMinus(){
+        Date current = Calendar.getInstance().getTime();
+        Long tMinus = end.getTime() - current.getTime();
+        tMinus = TimeUnit.MILLISECONDS.toMinutes(tMinus);
+        String returnString = "T-" + String.valueOf(tMinus);
+        return returnString;
     }
 }

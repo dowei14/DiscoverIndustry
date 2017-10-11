@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -43,8 +42,8 @@ public class Eg extends WearableActivity {
     private TimePicker timePicker;
     private TextView tvTMinus;
 
-    SimpleDateFormat endTime;
-    Date end;
+    private SimpleDateFormat endTime;
+    private Date end;
 
 
     @Override
@@ -72,6 +71,12 @@ public class Eg extends WearableActivity {
         nextGroup.setVisibility(View.GONE);
         tvTMinus.setVisibility(View.GONE);
 
+        mContainer.setBackgroundColor(ContextCompat.getColor(this,android.R.color.black));
+        tvCurrentPhase.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+        tvCurrentGroup.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+        tvGroupName.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+        mClockView.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+        tvTMinus.setTextColor(ContextCompat.getColor(this,android.R.color.white));
 
         endTime = new SimpleDateFormat("HH:mm:ss");
 
@@ -172,21 +177,21 @@ public class Eg extends WearableActivity {
             }
             mClockView.setTextSize(60);
             tvTMinus.setTextSize(40);
-            mContainer.setBackgroundColor(ContextCompat.getColor(this,android.R.color.black));
-            tvCurrentPhase.setTextColor(ContextCompat.getColor(this,android.R.color.white));
-            tvCurrentGroup.setTextColor(ContextCompat.getColor(this,android.R.color.white));
-            tvGroupName.setTextColor(ContextCompat.getColor(this,android.R.color.white));
-            mClockView.setTextColor(ContextCompat.getColor(this,android.R.color.white));
-            tvTMinus.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+            //mContainer.setBackgroundColor(ContextCompat.getColor(this,android.R.color.black));
+            //tvCurrentPhase.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+           // tvCurrentGroup.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+            //tvGroupName.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+            //mClockView.setTextColor(ContextCompat.getColor(this,android.R.color.white));
+            //tvTMinus.setTextColor(ContextCompat.getColor(this,android.R.color.white));
         } else {
-            mContainer.setBackground(null);
             mClockView.setTextSize(30);
             tvTMinus.setTextSize(30);
-            tvCurrentPhase.setTextColor(ContextCompat.getColor(this,android.R.color.black));
-            tvCurrentGroup.setTextColor(ContextCompat.getColor(this,android.R.color.black));
-            tvGroupName.setTextColor(ContextCompat.getColor(this,android.R.color.black));
-            mClockView.setTextColor(ContextCompat.getColor(this,android.R.color.black));
-            tvTMinus.setTextColor(ContextCompat.getColor(this,android.R.color.black));
+            //mContainer.setBackground(null);
+            //tvCurrentPhase.setTextColor(ContextCompat.getColor(this,android.R.color.black));
+            //tvCurrentGroup.setTextColor(ContextCompat.getColor(this,android.R.color.black));
+            //tvGroupName.setTextColor(ContextCompat.getColor(this,android.R.color.black));
+            //mClockView.setTextColor(ContextCompat.getColor(this,android.R.color.black));
+            //tvTMinus.setTextColor(ContextCompat.getColor(this,android.R.color.black));
         }
     }
 
